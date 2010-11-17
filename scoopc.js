@@ -65,9 +65,9 @@ function main() {
     }
 
     var options = {
-         oDir:      args.options.o || "."
-        ,verbose:   args.options.v || false
-        ,tranportD: args.options.t || false
+         oDir:       args.options.o || "."
+        ,verbose:    args.options.v || false
+        ,transportD: args.options.t || false
     }
 
     args.parameters.forEach(function(fileName) { 
@@ -111,13 +111,20 @@ function processSingleFile(fileName, options, dirs) {
     
     var baseFileName = path.basename(match[1])
     var moduleName   = getModuleName(fileName, dirs)
-    var oFileName    = options.oDir + "/" + moduleName + ".js"
+    var oFileName
+    
+    if (options.transportD) {
+        oFileName = options.oDir + "/" + moduleName + ".transportd.js"
+    }
+    else {
+        oFileName = options.oDir + "/" + moduleName + ".js"
+    }
     
     var processor = new Processor(fileName)
     var lines = processor.process()
     var content = lines.join("\n")
     
-    if (options.tranportD) content = transportDize(moduleName, content)
+    if (options.transportD) content = transportDize(moduleName, content)
     
     var oDirName = path.dirname(oFileName)
     var error = makedirs(oDirName)
@@ -285,15 +292,7 @@ defMethod(function logError(directive, message, lineOffset) {
 defMethod(function collectDirective(directive, header, trailer) {
     if (!trailer) trailer = ""
     
-    if (this.lines.length == 0) {
-        var scoojRequire = "var scooj = require('scooj'); "
-        if (directive.comments.length) {
-            directive.comments[0] = scoojRequire + directive.comments[0]
-        }
-        else {
-            directive.body[0] = scoojRequire + directive.body[0]
-        }
-    }
+    var insertScoojRequire = (this.lines.length == 0)
     
     if (!directive.body.length) {
         header += trailer
@@ -311,6 +310,17 @@ defMethod(function collectDirective(directive, header, trailer) {
     directive.body.forEach(function(line) {
         lines.push(line)
     })
+    
+    if (insertScoojRequire) {
+        var scoojRequire = "var scooj = require('scooj'); "
+        var lineNo = (lines[0].substring(0,2) == "#!") ? 1 : 0
+
+        if (typeof(lines[lineNo]) != "string") {
+            error("unable to place scooj require line")
+        }
+        
+        lines[lineNo] = "var scooj = require('scooj'); " + lines[lineNo]
+    }
 })
 
 //----------------------------------------------------------------------------
