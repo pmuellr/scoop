@@ -317,19 +317,22 @@ defMethod(function collectDirective(directive, header, trailer) {
 //
 //----------------------------------------------------------------------------
 defMethod(function processClass(directive) {
-    var pattern = /\s*(\w+)\s*(<<\s*(\w+))?\s*/
+    var pattern = /\s*(\w+)\s*(\(.*\))?\s*(<<\s*(\w+))?\s*/
         
     var match = pattern.exec(directive.args)
     if (!match) return this.logError(directive, "invalid syntax")
         
     var cls      = match[1]
-    var supercls = match[3]
+    var parms    = match[2]
+    var supercls = match[4]
+
+    if (!parms) parms = "()"
 
     var header = "var " + cls + " = scooj.defClass(module, "
     
     if (supercls) header += supercls + ", "
     
-    header += "function " + cls + "(){"
+    header += "function " + cls + parms + "{"
     
     trailer = "}); var $super = scooj.defSuper();"
     
