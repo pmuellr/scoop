@@ -15,14 +15,6 @@ class PointTests << TestSuite
     $super(this)
 
 //----------------------------------------------------------------------------
-static method suiteSetUp
-//    console.log("suiteSetUp()")
-
-//----------------------------------------------------------------------------
-static method suiteTearDown
-//    console.log("suiteTearDown()")
-
-//----------------------------------------------------------------------------
 method setUp
     this.p2a = new Point2({x:   2, y:   7})
     this.p2b = new Point2({x:  77, y:  22})
@@ -31,17 +23,8 @@ method setUp
     this.p4a = new Point4({x:   4, y:   9, z: 202, a: 41})
     this.p4b = new Point4({x:  99, y:  44, z: 626, a: 42})
     
-//    console.log("setUp()")
-//    console.log("p2a: " + this.p2a.toString())
-//    console.log("p2b: " + this.p2b.toString())
-//    console.log("p3a: " + this.p3a.toString())
-//    console.log("p3b: " + this.p3b.toString())
-//    console.log("p4a: " + this.p4a.toString())
-//    console.log("p4b: " + this.p4b.toString())
-
 //----------------------------------------------------------------------------
 method tearDown
-//    console.log("tearDown()")
 
 //----------------------------------------------------------------------------
 method test_2_2
