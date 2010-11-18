@@ -32,6 +32,8 @@ fi
 node scoopc.js -o tmp    test
 node scoopc.js -o tmp -t test
 
+NODE_PATH=test:.:node_modules test/test-scoop-file.js
+
 NODE_PATH=node_modules      node tmp/test/node-util.js
 NODE_PATH=node_modules:tmp  node test/tests-node.js
 

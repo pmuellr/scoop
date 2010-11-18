@@ -1,0 +1,7 @@
+class Testing
+
+method run
+    console.log("hello!")
+    
+static
+    new Testing().run()

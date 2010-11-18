@@ -24,6 +24,9 @@
 // THE SOFTWARE.
 //----------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------
+// requires
+//----------------------------------------------------------------------------
 var fs        = require("fs")
 var path      = require("path")
 var util      = require("util")
@@ -34,6 +37,24 @@ scooj.installGlobals()
 
 var PROGRAM_NAME
 
+//----------------------------------------------------------------------------
+// register compiler for node
+//----------------------------------------------------------------------------
+if (require.extensions) {
+    require.extensions[".scoop"] = function(module, fileName) {
+        var source  = fs.readFileSync(fileName, "utf8")
+        var content = Processor.compile(fileName, source)
+        
+        return module._compile(content, fileName)
+    }
+} 
+
+else if (require.registerExtension) {
+    require.registerExtension(".scoop", function(content) {
+        return Processor.compile("???", source)
+    })
+}
+    
 //----------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------
@@ -120,7 +141,9 @@ function processSingleFile(fileName, options, dirs) {
         oFileName = options.oDir + "/" + moduleName + ".js"
     }
     
-    var processor = new Processor(fileName)
+    var source = fs.readFileSync(fileName, "utf8")
+    
+    var processor = new Processor(fileName, source)
     var lines = processor.process()
     var content = lines.join("\n")
     
@@ -252,20 +275,28 @@ function error(message) {
 //----------------------------------------------------------------------------
 // process an individual file
 //----------------------------------------------------------------------------
-var Processor = defClass(module, function Processor(fileName) {
+var Processor = defClass(module, function Processor(fileName, source) {
     this.fileName = fileName
+    this.source   = source
     this.lines    = []
 })
 
+//----------------------------------------------------------------------------
+//
+//----------------------------------------------------------------------------
+defStaticMethod(function compile(fileName, source) {
+    var processor = new Processor(fileName, source)
+    var lines = processor.process()
+    return lines.join("\n")
+})
 
 //----------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------
 defMethod(function process() {
     var handler = new Handler(this)
-    var source = fs.readFileSync(this.fileName, "utf8")
     
-    var dr = new directive.DirectiveReader(source, this.fileName)
+    var dr = new directive.DirectiveReader(this.source, this.fileName)
     
     dr.process(handler)
 
@@ -478,5 +509,5 @@ defMethod(function fileEnd(edata) {
 //----------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------
-main()
+if (require.main == module) main()
 
