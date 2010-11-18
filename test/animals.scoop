@@ -19,18 +19,18 @@ method talk()
 
 //-----------------------------------------------------------------------------
 class Fish(name) << Animal
-    Fish.$super(this, null, name)
+    super(name)
 
 //-----------------------------------------------------------------------------
 class Cat(name) << Animal
-    Cat.$super(this, null, name)
+    super(name)
 
 method talk()
     this.answer("meow")
 
 //-----------------------------------------------------------------------------
 class Dog(name) << Animal
-    Dog.$super(this, null, name)
+    super(name)
 
 method setNoisy(value)
     this.noisy = value

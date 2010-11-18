@@ -9,11 +9,11 @@ require ./Point2
 
 //----------------------------------------------------------------------------
 class Point3(properties) << Point2
-    $super(this, null, properties)
+    super(properties)
 
 //----------------------------------------------------------------------------
 method add(aPoint)
-    var result = $super(this, "add", aPoint)
+    var result = super.add(aPoint)
     
     if (aPoint.z) {
         result.z += aPoint.z

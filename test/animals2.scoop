@@ -1,0 +1,41 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2010 Patrick Mueller
+// Licensed under the MIT license: 
+// http://www.opensource.org/licenses/mit-license.php
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// the CoffeeScript example: http://jashkenas.github.com/coffee-script/
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class Animal2(name)
+    this.name = name
+    
+method move(meters)
+    console.log(this.name + " moved " + meters + "m.")
+    
+//-----------------------------------------------------------------------------
+class Snake(name) << Animal2
+    super(name)
+    
+method move(meters)
+    console.log("Slithering...")
+    super(meters)
+    
+//-----------------------------------------------------------------------------
+class Horse(name) << Animal2
+    super(name)
+    
+method move(meters)
+    console.log("Galloping...")
+    super(meters)
+
+//-----------------------------------------------------------------------------
+static    
+
+    var sam = new Snake("Sammy the Python")
+    var tom = new Horse("Tommy the Palomino")
+
+    sam.move(5)
+    tom.move(45)

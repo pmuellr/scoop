@@ -9,11 +9,11 @@ require ./Point3
 
 //----------------------------------------------------------------------------
 class Point4(properties) << Point3
-    $super(this, null, properties)
+    super(properties)
 
 //----------------------------------------------------------------------------
 method add(aPoint)
-    var result = $super(this, "add", aPoint)
+    var result = super.add(aPoint)
     
     if (aPoint.a) {
         result.a += aPoint.a
@@ -23,4 +23,4 @@ method add(aPoint)
 
 //----------------------------------------------------------------------------
 method toString
-    return $super(this, "toString")
+    return super()

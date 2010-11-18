@@ -202,6 +202,30 @@ function makedirs(dirName) {
 //----------------------------------------------------------------------------
 //
 //----------------------------------------------------------------------------
+function replaceSuperInvocations(cls, methodName, methodBody) {
+    var pattern1 = /([^\w\$])super\(\s*\)/
+    var pattern2 = /([^\w\$])super\(/
+    var pattern3 = /([^\w\$])super\.([\w\$]*)\(\s*\)/
+    var pattern4 = /([^\w\$])super\.([\w\$]*)\(/
+    
+    if (!methodName) {
+        methodName = "null"
+    }
+    else {
+        methodName = '"' + methodName + '"'
+    }
+    
+    methodBody = methodBody.replace(pattern1, '$1' + cls + '.$super(this, ' + methodName + ')')
+    methodBody = methodBody.replace(pattern2, '$1' + cls + '.$super(this, ' + methodName + ',')
+    methodBody = methodBody.replace(pattern3, '$1' + cls + '.$super(this, "$2")')
+    methodBody = methodBody.replace(pattern4, '$1' + cls + '.$super(this, "$2", ')
+    
+    return methodBody
+}
+
+//----------------------------------------------------------------------------
+//
+//----------------------------------------------------------------------------
 function transportDize(moduleName, contents) {
     var header  = ';require.define({"' + moduleName + '": function(require, exports, module) { '
     var trailer = "\n}});\n"
@@ -276,9 +300,10 @@ function error(message) {
 // process an individual file
 //----------------------------------------------------------------------------
 var Processor = defClass(module, function Processor(fileName, source) {
-    this.fileName = fileName
-    this.source   = source
-    this.lines    = []
+    this.fileName     = fileName
+    this.source       = source
+    this.lines        = []
+    this.currentClass = "--NoClassDefined--"
 })
 
 //----------------------------------------------------------------------------
@@ -376,8 +401,13 @@ defMethod(function processClass(directive) {
     header += "function " + cls + parms + "{"
     
     trailer = "}); var $super = scooj.defSuper();"
+
+    body = replaceSuperInvocations(cls, null, directive.body.join("\n"))
+    directive.body = body.split("\n")
     
     this.collectDirective(directive, header, trailer)
+    
+    this.currentClass = cls
     
     return true
 })
@@ -399,6 +429,11 @@ defMethod(function processMethod(directive, isStatic) {
     var func = isStatic ? "defStaticMethod" : "defMethod"
     var header  = "scooj." + func + "(function " + method + parms + "{"
     var trailer = "})"
+    
+    if (!isStatic) {
+        body = replaceSuperInvocations(this.currentClass, method, directive.body.join("\n"))
+        directive.body = body.split("\n")
+    }
     
     this.collectDirective(directive, header, trailer)
     
