@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+//-----------------------------------------------------------------------------
+// Copyright (c) 2010 Patrick Mueller
+// Licensed under the MIT license: 
+// http://www.opensource.org/licenses/mit-license.php
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// the CoffeeScript example: http://jashkenas.github.com/coffee-script/
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class Animal(name)
+    this.init(name)
+
+method init(name)
+    this.name = name
+    
+method answer(string)
+    console.log(this.constructor.name + " " + this.name + ": " + string)
+
+method talk()
+    this.answer("I can't talk")
+
+//-----------------------------------------------------------------------------
+class Fish(name) << Animal
+    Fish.$super(this, null, name)
+
+//-----------------------------------------------------------------------------
+class Cat(name) << Animal
+    Cat.$super(this, null, name)
+
+method talk()
+    this.answer("meow")
+
+//-----------------------------------------------------------------------------
+class Dog(name) << Animal
+    Dog.$super(this, null, name)
+
+method setNoisy(value)
+    this.noisy = value
+
+method talkNoisy()
+    this.answer("RUFF RUFF RUFF")
+    
+method talkQuiet()
+    this.answer("yawn")
+    
+method talk()
+    if (this.noisy) this.talkNoisy()
+    else            this.talkQuiet()
+
+//-----------------------------------------------------------------------------
+static
+    var sharky = new Fish("Sharky")
+    var oscar  = new Cat("Oscar")
+    var shadow = new Dog("Shadow")
+    
+    sharky.talk()
+    oscar.talk()
+    shadow.talk()
+    shadow.setNoisy(true)
+    shadow.talk()
+    shadow.setNoisy(false)
+    shadow.talk()
+    
+//-----------------------------------------------------------------------------
+// Fish Sharky: I can't talk
+// Cat Oscar: meow
+// Dog Shadow: yawn
+// Dog Shadow: RUFF RUFF RUFF
+// Dog Shadow: yawn
+//-----------------------------------------------------------------------------
+

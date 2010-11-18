@@ -3,3 +3,4 @@
 require("scoopc")
 
 require("a-scoop-file")
+require("animals")
