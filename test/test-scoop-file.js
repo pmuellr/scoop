@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require("scoopc")
+require("scoop")
 
 require("a-scoop-file")
 require("animals")

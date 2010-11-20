@@ -25,7 +25,7 @@ if [ ! -z $MODJEWEL ]; then
     fi
 
     cp -R . ../tmp
-    ../scoopc.js -o ../tmp .
+    ../scoop.js -o ../tmp .
     cp ../../scooj/scooj.js ../tmp
     $MODJEWEL/module2transportd.py -o ../tmp --htmlFile test-driver.html --htmlMain "require('tests-node')" ../tmp
     cp $MODJEWEL/modjewel-require.js ../tmp
@@ -34,7 +34,7 @@ if [ ! -z $MODJEWEL ]; then
 
 fi
 
-../scoopc.js -o ../tmp .
+../scoop.js -o ../tmp .
 
 NODE_PATH=..:. ./test-scoop-file.js
 
