@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 class CommandLineUtilityInTheory
 
 static method run

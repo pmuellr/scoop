@@ -24,6 +24,12 @@
 // THE SOFTWARE.
 //----------------------------------------------------------------------------
 
+var fs   = require("fs")
+var path = require("path")
+
+var submods = path.dirname(fs.realpathSync(__filename)) + "/node_modules"
+require.paths.unshift(submods)
+
 //----------------------------------------------------------------------------
 // requires
 //----------------------------------------------------------------------------
@@ -128,13 +134,19 @@ function processFile(fileName, options, dirs) {
 //----------------------------------------------------------------------------
 function processSingleFile(fileName, options, dirs) {
     var match = /(.*)\.scoop\.js$/.exec(fileName)
-    if (!match) return
+    if (!match) {
+        match = /(.*)\.scoop$/.exec(fileName)
+        if (!match) return
+    }
     
     var baseFileName = path.basename(match[1])
-    var moduleName   = getModuleName(fileName, dirs)
+    var moduleName   = getModuleName(baseFileName, dirs)
     var oFileName
     
-    if (options.transportD) {
+    if (options.oDir == "-") {
+        oFileName = null
+    }
+    else if (options.transportD) {
         oFileName = options.oDir + "/" + moduleName + ".transportd.js"
     }
     else {
@@ -149,12 +161,19 @@ function processSingleFile(fileName, options, dirs) {
     
     if (options.transportD) content = transportDize(moduleName, content)
     
-    var oDirName = path.dirname(oFileName)
-    var error = makedirs(oDirName)
-    if (error) error("error creating directory: '" + oDirName + "'")
+    if (oFileName) {
+        var oDirName = path.dirname(oFileName)
+        var error = makedirs(oDirName)
+        if (error) error("error creating directory: '" + oDirName + "'")
     
-    fs.writeFileSync(oFileName, content, "utf8")
-    log("wrote: " + oFileName)
+        fs.writeFileSync(oFileName, content, "utf8")
+        log("wrote: " + oFileName)
+    }
+    
+    else {
+        console.log(content)
+        console.log()
+    }
 }
 
 //----------------------------------------------------------------------------
