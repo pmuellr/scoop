@@ -1,0 +1,19 @@
+{
+    "name":         "scoop",
+    "description":  "Simple Classical OO Preprocessor (for JavaScript)",
+    "author":       "Patrick Mueller",
+    "version":      "0.2.0",
+    "licenses":     [{
+        "type":     "MIT",
+        "url":      "http://www.opensource.org/licenses/mit-license.php"
+    }],
+    "repository" :  { 
+        "type" :    "git",
+        "url" :     "git://github.com/pmuellr/scoop.git"
+    },
+    "main" :        "scoop",
+    "dependencies" :{ 
+        "scooj" :    "*",
+        "directive": "*"
+    }
+}
